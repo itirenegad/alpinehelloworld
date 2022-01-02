@@ -4,9 +4,9 @@ pipeline {
         IMAGE_NAME = "alpinehelloworld"
         IMAGE_TAG = "testdvp-2.1"
         CONTAINER_NAME = "alpinehellowolrd"
+        USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
-        USERNAME = "itirenegad"
     }
   
     agent none
@@ -66,7 +66,6 @@ pipeline {
                     }
                 }
             }
-        }
   
         stage ('PUSH IMAGE IN STAGING AND DEPLOY IT') {
             when {
@@ -87,7 +86,6 @@ pipeline {
                     }
                 }
             } 
-        }
 
         stage ('PUSH IMAGE IN PRODUCTION AND DEPLOY IT') {
             when {
@@ -108,6 +106,6 @@ pipeline {
                     }
                 }   
             }
-        }
+        
     }
 }
