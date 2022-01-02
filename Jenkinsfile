@@ -2,7 +2,7 @@ pipeline {
   
     environment {
         IMAGE_NAME = "alpinehelloworld"
-        IMAGE_TAG = "testdvp-2.1"
+        IMAGE_TAG = "testdvp-4.0"
         CONTAINER_NAME = "alpinehellowolrd"
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
@@ -29,7 +29,7 @@ pipeline {
                     sh  '''
                         docker stop $CONTAINER_NAME || true
                         docker rm $CONTAINER_NAME || true
-                        docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                        docker run -d --name $CONTAINER_NAME -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG
                         sleep 5
                     '''
                     }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     sh  '''
-                        docker login -u $USERNAME -p $PASSWORD
+                        docker login -u $USERNAME --password $PASSWORD
                         docker push $USERNAME/$IMAGE_NAME:$IMAGE_TAG
                         docker stop $CONTAINER_NAME || true
                         docker rm $CONTAINER_NAME || true
