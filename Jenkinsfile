@@ -7,13 +7,14 @@ pipeline {
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
+        EC2_PRODUCTION_HOST = "34.243.75.9"
     }
   
     agent none
   
     stages {
      
-        stage ('BUILD IMAGE') {
+        stage ('Build image') {
             agent any
             steps {
                 script {
@@ -22,7 +23,7 @@ pipeline {
             }
         }
     
-        stage ('RUN TEST CONTAINER') {
+        stage ('Run test container') {
             agent any
             steps {
                 script {
@@ -36,7 +37,7 @@ pipeline {
             }
         }
     
-        stage ('TEST CONTAINER') {
+        stage ('Test application) {
             agent any
             steps {
                 script {
@@ -47,7 +48,7 @@ pipeline {
             }
         }
     
-        stage ('CLEAN BUILD ENVIRONMENT AND SAVE ARTEFACT') {
+        stage ('Clean env and save artifact') {
             agent any
             environment {
                 PASSWORD = credentials('dockerhub_password')
@@ -65,11 +66,11 @@ pipeline {
             }
         }
   
-        stage ('PUSH IMAGE IN STAGING AND DEPLOY IT') {
+        stage ('Push image in staging and deploy it') {
+            agent any
             when {
                 expression { GIT_BRANCH == 'origin/master'}
             }
-            agent any
             environment {
                 HEROKU_API_KEY = credentials('heroku_api_key')
             }
@@ -85,11 +86,11 @@ pipeline {
             }
         } 
 
-        stage ('PUSH IMAGE IN PRODUCTION AND DEPLOY IT') {
+        stage ('Push image in Prod and deploy it') {
+            agent any
             when {
                 expression { GIT_BRANCH == 'origin/master'}
             }
-            agent any
             environment {
                 HEROKU_API_KEY = credentials('heroku_api_key')
             }
@@ -104,9 +105,32 @@ pipeline {
                 }   
             }
         }
-    }
 
-    post ('SLACK NOTIFICATION') {
+        stage('Deploy app on EC2-cloud Production') {
+            agent any
+            when{
+               expression { GIT_BRANCH == 'origin/master'}
+            }
+            steps{
+                withCredentials([sshUserPrivateKey(credentialsId: "ec2_prod_private_key", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        script{ 
+
+                            timeout(time: 15, unit: "MINUTES") {
+                                input message: 'Do you want to approve the deploy in production?', ok: 'Yes'
+                            }
+
+                            sh'''
+                                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${EC2_PRODUCTION_HOST} docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+    }   
+
+    post {
         success{
             slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
