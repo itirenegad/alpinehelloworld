@@ -32,9 +32,9 @@ pipeline {
                         docker run -d --name $CONTAINER_NAME -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG
                         sleep 5
                     '''
-                    }
                 }
             }
+        }
     
         stage ('TEST CONTAINER') {
             agent any
@@ -61,9 +61,9 @@ pipeline {
                         docker rm $CONTAINER_NAME || true
                         docker rmi $USERNAME/$IMAGE_NAME:$IMAGE_TAG
                     '''
-                    }
                 }
             }
+        }
   
         stage ('PUSH IMAGE IN STAGING AND DEPLOY IT') {
             when {
@@ -81,9 +81,9 @@ pipeline {
                         heroku container:push -a $STAGING web
                         heroku container:release -a $STAGING web
                     '''
-                    }
                 }
-            } 
+            }
+        } 
 
         stage ('PUSH IMAGE IN PRODUCTION AND DEPLOY IT') {
             when {
@@ -100,10 +100,18 @@ pipeline {
                         heroku create $PRODUCTION || echo "PROJECT ALREADY EXISTS" 
                         heroku container:push -a $PRODUCTION web
                         heroku container:release -a $PRODUCTION web
-                    '''
-                    }
+                    '''    
                 }   
             }
-        
-      }
+        }
+    }
+
+    post {
+        success{
+            slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        failure {
+            slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+    }
 }
