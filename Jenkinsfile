@@ -18,8 +18,8 @@ pipeline {
                 script {
                     sh 'docker build -t $USERNAME/$IMAGE_NAME:$IMAGE_TAG .'
                 }
+            }
         }
-    }
     
         stage ('RUN TEST CONTAINER') {
             agent any
@@ -50,7 +50,7 @@ pipeline {
         stage ('CLEAN BUILD ENVIRONMENT AND SAVE ARTEFACT') {
             agent any
             environment {
-                PASSWORD = credentials('dockerhub_password')
+                PASSWORD = credentials('dockerhub_login')
             }
             steps {
                 script {
@@ -70,7 +70,7 @@ pipeline {
         stage ('PUSH IMAGE IN STAGING AND DEPLOY IT') {
             when {
                 expression { GIT_BRANCH == 'origin/master'
-            }            }  
+            }
             agent any
             environment {
                 HEROKU_API_KEY = credentials('heroku_api_key')
