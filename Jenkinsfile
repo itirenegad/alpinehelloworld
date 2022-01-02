@@ -2,7 +2,7 @@ pipeline {
   
     environment {
         IMAGE_NAME = "alpinehelloworld"
-        IMAGE_TAG = "testdvp-4.0"
+        IMAGE_TAG = "testdvp-3.0"
         CONTAINER_NAME = "alpinehellowolrd"
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
