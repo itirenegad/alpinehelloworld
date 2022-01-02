@@ -7,7 +7,7 @@ pipeline {
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
-        EC2_PRODUCTION_HOST = "jenkins-container-server"
+        EC2_PRODUCTION_HOST = "34.243.75.9"
     }
   
     agent none
@@ -121,7 +121,7 @@ pipeline {
                             timeout(time: 15, unit: "MINUTES") { input message: 'Do you want to approve the deploy in production?', ok: 'Yes'}
 
                             sh '''
-                               ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${EC2_PRODUCTION_HOST} docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                               'ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${EC2_PRODUCTION_HOST} docker run --name $CONTAINER_NAME -d -e PORT=5000 -p 5000:5000 $USERNAME/$IMAGE_NAME:$IMAGE_TAG'
                             '''
                         }
                     }
