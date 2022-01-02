@@ -50,7 +50,7 @@ pipeline {
         stage ('CLEAN BUILD ENVIRONMENT AND SAVE ARTEFACT') {
             agent any
             environment {
-                PASSWORD = credentials('dockerhub_login')
+                PASSWORD = credentials('dockerhub_password')
             }
             steps {
                 script {
