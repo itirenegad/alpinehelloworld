@@ -7,7 +7,7 @@ pipeline {
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
-        EC2_PRODUCTION_HOST = "ec2-34-243-75-9.eu-west-1.compute.amazonaws.com"
+        EC2_PRODUCTION_HOST = "34.243.75.9"
     }
   
     agent none
