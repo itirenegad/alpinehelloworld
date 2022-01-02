@@ -37,7 +37,7 @@ pipeline {
             }
         }
     
-        stage ('Test application) {
+        stage ('Test application') {
             agent any
             steps {
                 script {
