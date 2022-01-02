@@ -3,6 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME = "alpinehelloworld"
         IMAGE_TAG = "testdvp-2.1"
+        CONTAINER_NAME = "alpinehellowolrd"
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
         USERNAME = "itirenegad"
