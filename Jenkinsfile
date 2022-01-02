@@ -60,7 +60,6 @@ pipeline {
                         docker stop $CONTAINER_NAME || true
                         docker rm $CONTAINER_NAME || true
                         docker rmi $USERNAME/$IMAGE_NAME:$IMAGE_TAG
-                        docker rmi $IMAGE_NAME:$IMAGE_TAG
                     '''
                     }
                 }
@@ -78,7 +77,7 @@ pipeline {
                 script {
                     sh '''
                         heroku container:login
-                        heroku create $STAGING || echo "PROJECT ALREADY EXIST" 
+                        heroku create $STAGING || echo "PROJECT ALREADY EXISTS" 
                         heroku container:push -a $STAGING web
                         heroku container:release -a $STAGING web
                     '''
@@ -98,7 +97,7 @@ pipeline {
                 script {
                     sh '''
                         heroku container:login
-                        heroku create $PRODUCTION || echo "PROJECT ALREADY EXIST" 
+                        heroku create $PRODUCTION || echo "PROJECT ALREADY EXISTS" 
                         heroku container:push -a $PRODUCTION web
                         heroku container:release -a $PRODUCTION web
                     '''
