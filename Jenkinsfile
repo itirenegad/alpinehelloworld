@@ -69,7 +69,7 @@ pipeline {
   
         stage ('PUSH IMAGE IN STAGING AND DEPLOY IT') {
             when {
-                expression { GIT_BRANCH == 'origin/master'
+                expression { GIT_BRANCH == 'origin/master'}
             }
             agent any
             environment {
@@ -90,7 +90,7 @@ pipeline {
 
         stage ('PUSH IMAGE IN PRODUCTION AND DEPLOY IT') {
             when {
-                expression { GIT_BRANCH == 'origin/master'
+                expression { GIT_BRANCH == 'origin/master'}
             }
             agent any
             environment {
