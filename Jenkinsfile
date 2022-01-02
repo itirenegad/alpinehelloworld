@@ -7,7 +7,7 @@ pipeline {
         USERNAME = "itirenegad"      
         STAGING = "itirenegad-ahw-staging-env"
         PRODUCTION = "itirenegad-ahw-prod-env"
-        EC2_PRODUCTION_HOST = "34.243.75.9"
+        EC2_PRODUCTION_HOST = "jenkins-container-server"
     }
   
     agent none
